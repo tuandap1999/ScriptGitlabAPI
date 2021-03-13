@@ -17,7 +17,6 @@ Menu()
 	echo "5. Exit"
     while true; do
         read option
-        echo $option
         case $option in 
 			5)
             break;
@@ -37,6 +36,7 @@ Menu()
             # Goi ham AssigneProjectToGroup voi cac tham so truyen vao
             AssigneProjectToGroup $urlProject $token $projectName $projectDescription $groupName
             #break
+			echo -e "Press enter key to continues...."
             ;;
             2)
 			echo -e "** Them thanh vien vao group và cấp quyền cho member **"
@@ -53,6 +53,7 @@ Menu()
 			# Goi ham AddmemberforGroups voi cac tham so truyen vao
             AddmemberforGroups $urlGitlab $token $groupName $userName $role
             #break
+			echo -e "Press enter key to continues...."
             ;;
 			3)
 			echo -e "** Xoa thanh vien trong group **"
@@ -67,24 +68,28 @@ Menu()
 			# Goi ham RemovememberforGroup voi cac tham so truyen vao
             RemovememberforGroup $urlGitlab $token $groupName $userName
 			#break
+			echo -e "Press enter key to continues...."
 			;;
 			0)
-			echo -e "** Xoa thanh vien trong group **"
-            echo "Nhap urlGitlab:"
-            read urlGitlab
-            echo "Nhap token:"
-            read token
-			echo "Nhap projectName:"
-            read projectName
-			RemovememberforGroup $urlGitlab $token $projectName
+			echo "Nhap mat khau"
+			read pass
+			if [ $pass == "dev123" ]
+			then
+			 echo -e "** Xoa thanh vien trong group **"
+			 echo "Nhap urlGitlab:"
+			 read urlGitlab
+			 echo "Nhap token:"
+			 read token
+			 echo "Nhap projectName:"
+			 read projectName
+			 RemovememberforGroup $urlGitlab $token $projectName
+			else
+			 Menu
+			fi		
+			echo -e "Press enter key to continues...."
 			;;
 			*)
-            echo "Chon 1 - 4 hoac chon 5 de thoat" 
-            echo "1. Create Project and Add Project to Group"
-			echo "2. Add Member to Group"
-			echo "3. Remove member to Group"
-			echo "0. Remove Project"
-			echo "5. Exit"
+              Menu
             ;;
         esac
     done

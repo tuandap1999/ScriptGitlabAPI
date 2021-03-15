@@ -6,14 +6,15 @@ Menu()
     UGre='\e[4;32m';
     Whi='\e[0;37m'; 
     NOCOLOR="\033[0m"
-    clear
     echo -e "${Gre}"
-	now="$(date +'%d/%m/%Y')"
-    echo "Current date: " "$now"
+	Datenow="$(date +'%d/%m/%Y')"
+	User="$(whoami)"
+    echo "$Datenow" "----------" "$User"
 	echo "~~~~~~~~~~~~~~~~~~~~~"	
 	echo " M A I N - M E N U"
 	echo "~~~~~~~~~~~~~~~~~~~~~"
-	echo "1. Create Project and Add Project to Group"
+	echo "1. Create Project and Add Project"
+	echo "4. Git pull/push"
 	echo "2. Add Member to Group"
 	echo "3. Remove member to Group"
 	echo "0. Remove Project"

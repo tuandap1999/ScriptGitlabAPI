@@ -1,4 +1,4 @@
-
+export LANG=C.UTF-8
 Menu()
 {
     # Khai bao bien mau cho text
@@ -26,16 +26,16 @@ Menu()
             ;;
             1)
 		    clear
-            echo -e "** Tao project va them project vao group **"
-            echo "Nhap urlProject:"
+            echo -e "** Tạo project và thêm project vào group **"
+            echo "Nhập UrlGitlab (ex: https://example.com):"
             read urlProject
-            echo "Nhap token:"
+            echo "Nhập token:"
             read token
-            echo "Nhap projectName:"
+            echo "Nhập projectName:"
             read projectName
-            echo "Nhap projectDescription:"
+            echo "Nhập projectDescription:"
             read projectDescription
-            echo "Nhap groupName:"
+            echo "Nhập groupName:"
             read groupName
             # Goi ham AssigneProjectToGroup voi cac tham so truyen vao
             AssigneProjectToGroup $urlProject $token $projectName $projectDescription $groupName
@@ -44,16 +44,16 @@ Menu()
             ;;
             2)
 		    clear
-			echo -e "** Them thanh vien vao group và cấp quyền cho member **"
-            echo "Nhap urlGitlab:"
+			echo -e "** Thêm thanh viên vào group và cấp quyền cho member **"
+            echo "Nhập UrlGitlab (ex: https://example.com):"
             read urlGitlab
-            echo "Nhap token:"
+            echo "Nhập Token:"
             read token
-			echo "Nhap Username:"
+			echo "Nhập Username:"
             read userName
-			echo "Nhap Vai tro (0, 10, 20, 30, 40, 50):"
+			echo "Nhập quyền/permission (0, 10, 20, 30, 40, 50):"
             read role
-			echo "Nhap groupName:"
+			echo "Nhập GroupName:"
             read groupName
 			# Goi ham AddmemberforGroups voi cac tham so truyen vao
             AddmemberforGroups $urlGitlab $token $groupName $userName $role
@@ -62,14 +62,14 @@ Menu()
             ;;
 			3)
 		    clear
-			echo -e "** Xoa thanh vien trong group **"
-            echo "Nhap urlGitlab:"
+			echo -e "** Xoá thành viên trong Group **"
+            echo "Nhập UrlGitlab (ex: https://example.com):"
             read urlGitlab
-            echo "Nhap token:"
+            echo "Nhập Token:"
             read token
-			echo "Nhap Username:"
+			echo "Nhập Username:"
             read userName
-			echo "Nhap groupName:"
+			echo "Nhập GroupName:"
             read groupName
 			# Goi ham RemovememberforGroup voi cac tham so truyen vao
             RemovememberforGroup $urlGitlab $token $groupName $userName
@@ -78,16 +78,16 @@ Menu()
 			;;
 			0)
 		    clear
-			echo "Nhap mat khau"
+			echo "Nhập password: "
 			read pass
 			if [ $pass == "dev123" ]
 			then
-			 echo -e "** Xoa thanh vien trong group **"
-			 echo "Nhap urlGitlab:"
+			 echo -e "** Xoá Project **"
+            echo "Nhập UrlGitlab (ex: https://example.com):"
 			 read urlGitlab
-			 echo "Nhap token:"
+			 echo "Nhập token:"
 			 read token
-			 echo "Nhap projectName:"
+			 echo "Nhập projectName:"
 			 read projectName
 			 RemovememberforGroup $urlGitlab $token $projectName
 			else

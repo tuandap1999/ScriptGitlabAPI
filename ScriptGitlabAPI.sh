@@ -1,3 +1,4 @@
+
 Menu()
 {
     # Khai bao bien mau cho text
@@ -7,6 +8,8 @@ Menu()
     NOCOLOR="\033[0m"
     clear
     echo -e "${Gre}"
+	now="$(date +'%d/%m/%Y')"
+    echo "Current date: " "$now"
 	echo "~~~~~~~~~~~~~~~~~~~~~"	
 	echo " M A I N - M E N U"
 	echo "~~~~~~~~~~~~~~~~~~~~~"
@@ -17,11 +20,12 @@ Menu()
 	echo "5. Exit"
     while true; do
         read option
-        case $option in 
+        case $option in		
 			5)
             break;
             ;;
             1)
+		    clear
             echo -e "** Tao project va them project vao group **"
             echo "Nhap urlProject:"
             read urlProject
@@ -39,6 +43,7 @@ Menu()
 			echo -e "Press enter key to continues...."
             ;;
             2)
+		    clear
 			echo -e "** Them thanh vien vao group và cấp quyền cho member **"
             echo "Nhap urlGitlab:"
             read urlGitlab
@@ -56,6 +61,7 @@ Menu()
 			echo -e "Press enter key to continues...."
             ;;
 			3)
+		    clear
 			echo -e "** Xoa thanh vien trong group **"
             echo "Nhap urlGitlab:"
             read urlGitlab
@@ -71,6 +77,7 @@ Menu()
 			echo -e "Press enter key to continues...."
 			;;
 			0)
+		    clear
 			echo "Nhap mat khau"
 			read pass
 			if [ $pass == "dev123" ]
@@ -84,7 +91,7 @@ Menu()
 			 read projectName
 			 RemovememberforGroup $urlGitlab $token $projectName
 			else
-			 Menu
+			 echo -e "Password invalid"
 			fi		
 			echo -e "Press enter key to continues...."
 			;;

@@ -16,7 +16,7 @@ Menu()
 	echo "~~~~~~~~~~~~~~~~~~~~~"
 	echo "1. Create Project and Add Project for Group"
 	echo "2. Git clone/push"
-	echo "3. Add Member to Group"
+	echo "3. Add Member in Group"
 	echo "4. Remove member to Group"
 	echo "0. Remove Project"
 	echo "5. Exit"
@@ -167,6 +167,11 @@ projectId=$(echo $(echo $project | cut -d':' -f 2) | cut -d',' -f 1)
 #echo $projectId
 # Gán Project cho Group theo projectId và và groupId
 curl --insecure --request POST --header "PRIVATE-TOKEN: $2" "$1/api/v4/groups/$groupId/projects/$projectId"
+#In ra thông tin chung
+echo -e "URL: $1\r\nToken: $2\r\nProjectName: $3\r\nGroupName: $5\r\n" >> test.txt
+rm -f test.txt
+rm -f Infomation.txt
+awk '!seen[$0]++' test.txt >> Infomation.txt
 }
 
 ##########Thêm thành viên cho Group và cấp quyên cho thành viên
@@ -182,6 +187,11 @@ groupId=$(echo $(echo $group | cut -d':' -f 2) | cut -d',' -f 1)
 #echo $groupId
 #Thêm member vào group theo UserId và GroupId
 curl --insecure --request POST --header "PRIVATE-TOKEN: $2" --data "user_id=$userId&access_level=$5" "$1/api/v4/groups/$groupId/members"
+#In ra thông tin chung
+echo -e "\r\n\Username: $4\r\nAccessToken: $5\r\n\r\n" >> test.txt
+rm -f test.txt
+#rm -f Infomation.txt
+awk '!seen[$0]++' test.txt >> Infomation.txt
 }
 ##########Xoá 1 thành viên khỏi Group
 RemovememberforGroup(){
@@ -201,7 +211,7 @@ curl --insecure --request DELETE  --header "PRIVATE-TOKEN: $2" "$1/api/v4/groups
 ##########Xoá Project
 RemoveProject(){
 # Các biến truyền vào $urlGitlab $token $projectName
-# Lấy Id Project theo project
+# Lấy Id Project theo projectName
 project=$(curl --insecure --header "PRIVATE-TOKEN: $2" "$1/api/v4/search?scope=projects&search=$3")
 projectId=$(echo $(echo $project | cut -d':' -f 2) | cut -d',' -f 1)
 #echo $projectId

@@ -14,7 +14,7 @@ Menu()
 	echo "~~~~~~~~~~~~~~~~~~~~~"	
 	echo " M A I N - M E N U"
 	echo "~~~~~~~~~~~~~~~~~~~~~"
-	echo "1. Create Project and Add Project"
+	echo "1. Create Project and Add Project for Group"
 	echo "2. Git pull/push"
 	echo "3. Add Member to Group"
 	echo "4. Remove member to Group"
@@ -45,6 +45,7 @@ Menu()
 			echo -e "Press enter key to continues...."
             ;;
 			2)
+			MenuG(){
 			clear
 			echo "1. Git pull"
 			echo "2. Git push"
@@ -53,7 +54,7 @@ Menu()
 			read option2
 			case $option2 in
 			3)
-			break;
+			Menu
 			;;
 			1)
 				clear
@@ -69,6 +70,7 @@ Menu()
 				echo "Nhập tên remote:"
 				read remoteName
 				gitfull  $urlProject $token $projectName $folder $remoteName
+				echo -e "Press enter key to continues...."
 				#break;
 				;;
 			2)
@@ -81,13 +83,16 @@ Menu()
 				echo "Nhập commit:"
 				read commit
 				gitpush $folder $branchName $commit
+				echo -e "Press enter key to continues...."
 				#break;
 			;;
 			*)
-              Menu
+              MenuG
             ;;
 				esac
 			done
+			}
+			MenuG
 			;;
             3)
 		    clear
@@ -236,4 +241,4 @@ git push $remotev $2
 }
 
 # Goi Ham Menu
- Menu
+Menu

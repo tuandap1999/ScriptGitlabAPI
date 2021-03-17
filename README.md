@@ -6,7 +6,7 @@
 - Maintainer (40)
 - Owner (50) 
 
-#Create AccessToken in Gitlab
+# Create AccessToken in Gitlab
 - Log in to GitLab.
 - Navigate to the project you would like to create an access token for.
 - In the Settings menu choose Access Tokens.

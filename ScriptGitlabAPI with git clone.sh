@@ -169,9 +169,9 @@ projectId=$(echo $(echo $project | cut -d':' -f 2) | cut -d',' -f 1)
 curl --insecure --request POST --header "PRIVATE-TOKEN: $2" "$1/api/v4/groups/$groupId/projects/$projectId"
 #In ra thông tin chung
 echo -e "URL: $1\r\nToken: $2\r\nProjectName: $3\r\nGroupName: $5\r\n" >> test.txt
-rm -f test.txt
 rm -f Infomation.txt
 awk '!seen[$0]++' test.txt >> Infomation.txt
+rm -f test.txt
 }
 
 ##########Thêm thành viên cho Group và cấp quyên cho thành viên
@@ -188,10 +188,11 @@ groupId=$(echo $(echo $group | cut -d':' -f 2) | cut -d',' -f 1)
 #Thêm member vào group theo UserId và GroupId
 curl --insecure --request POST --header "PRIVATE-TOKEN: $2" --data "user_id=$userId&access_level=$5" "$1/api/v4/groups/$groupId/members"
 #In ra thông tin chung
-echo -e "\r\n\Username: $4\r\nAccessToken: $5\r\n\r\n" >> test.txt
-rm -f test.txt
-#rm -f Infomation.txt
+echo -e "URL: $1\r\nToken: $2\r\nProjectName: $3\r\nGroupName: $5\r\n\r\nUsername: $4\r\nAccessToken: $5\r\n\r\n" >> test.txt
+#rm -f test.txt
+rm -f Infomation.txt
 awk '!seen[$0]++' test.txt >> Infomation.txt
+rm -f test.txt
 }
 ##########Xoá 1 thành viên khỏi Group
 RemovememberforGroup(){

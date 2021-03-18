@@ -1,4 +1,12 @@
 export LANG=C.UTF-8
+
+funcInput(){
+            echo "Nhập UrlGitlab (ex: https:/git.example.com):"
+            read urlGitlab
+            echo "Nhập token:"
+            read token
+}
+
 Menu()
 {
     # Khai bao bien mau cho text
@@ -27,20 +35,17 @@ Menu()
             break;
             ;;
             1)
-		    clear
-            echo -e "** Tạo project và thêm project vào group **"
-            echo "Nhập UrlGitlab (ex: https:/git.example.com):"
-            read urlProject
-            echo "Nhập token:"
-            read token
-            echo "Nhập projectName:"
+			clear
+			echo -e "** Tạo project và thêm project vào group **"
+			funcInput
+		    echo "Nhập projectName:"
             read projectName
             echo "Nhập projectDescription:"
             read projectDescription
             echo "Nhập groupName:"
             read groupName
             # Goi ham AssigneProjectToGroup voi cac tham so truyen vao
-            AssigneProjectToGroup $urlProject $token $projectName $projectDescription $groupName
+            AssigneProjectToGroup $urlGitlab $token $projectName $projectDescription $groupName
             #break
 			echo -e "Press enter key to continues...."
             ;;
@@ -59,15 +64,12 @@ Menu()
 			1)
 				clear
 				echo -e "Git pull"
-				echo "Nhập UrlGitlab (ex: https://git.example.vn):"
-				read urlProject
-				echo "Nhập token:"
-				read token
+				funcInput
 				echo "Nhập projectName:"
 				read projectName
 				echo "Nhập tên remote(if add new remote 'Default: origin'):"
 				read remoteName
-				gitclone  $urlProject $token $projectName $remoteName
+				gitclone  $urlGitlab $token $projectName $remoteName
 				echo -e "Press enter key to continues...."
 				#break;
 				;;
@@ -95,10 +97,7 @@ Menu()
             3)
 		    clear
 			echo -e "** Thêm thanh viên vào group và cấp quyền cho member **"
-            echo "Nhập UrlGitlab (ex: https://git.example.com):"
-            read urlGitlab
-            echo "Nhập Token:"
-            read token
+            funcInput
 			echo "Nhập Username:"
             read userName
 			echo "Nhập quyền/permission (0, 10, 20, 30, 40, 50):"
@@ -113,10 +112,7 @@ Menu()
 			4)
 		    clear
 			echo -e "** Xoá thành viên trong Group **"
-            echo "Nhập UrlGitlab (ex: https://git.example.com):"
-            read urlGitlab
-            echo "Nhập Token:"
-            read token
+            funcInput
 			echo "Nhập Username:"
             read userName
 			echo "Nhập GroupName:"
@@ -133,17 +129,14 @@ Menu()
 			if [ $pass == "dev123" ]
 			then
 			 echo -e "** Xoá Project **"
-             echo "Nhập UrlGitlab (ex: https://git.example.com):"
-			 read urlGitlab
-			 echo "Nhập token:"
-			 read token
+             funcInput
 			 echo "Nhập projectName:"
 			 read projectName
-			 RemovememberforGroup $urlGitlab $token $projectName
+			 RemoveProject $urlGitlab $token $projectName
 			else
 			 echo -e "Password invalid"
 			fi		
-			echo -e "Press enter key to continues...."
+			echo -e "Press enter key to continues...."	
 			;;
 			*)
               Menu
@@ -152,19 +145,27 @@ Menu()
     done
 }
 
+functionTest(){
+	#Lấy Id Group theo groupName
+	group=$(curl --insecure --header "PRIVATE-TOKEN: $token" "$urlGitlab/api/v4/groups?search=$groupName")
+	groupId=$(echo $(echo $group | cut -d':' -f 2) | cut -d',' -f 1)
+	# Lấy Id Project theo projectName
+	project=$(curl --insecure --header "PRIVATE-TOKEN: $token" "$urlGitlab/api/v4/search?scope=projects&search=$projectName")
+	projectId=$(echo $(echo $project | cut -d':' -f 2) | cut -d',' -f 1)
+	# Hiển thị userId theo Username
+	user=$(curl --insecure --header "PRIVATE-TOKEN: $token" "$urlGitlab/api/v4/search?scope=users&search=$userName")
+	userId=$(echo $(echo $user | cut -d':' -f 2) | cut -d',' -f 1)
+	# Lấy $urlProject theo projectId
+	projectinId=$(curl --insecure --header "PRIVATE-TOKEN: $token" "$urlGitlab/api/v4/projects/$projectId")
+	urlProjectbyid=$(echo $(echo $(echo $projectinId | cut -d':' -f 15,16) | cut -d',' -f 1) | cut -d '"' -f 2)
+}
+
 ##########Thêm Project và đẩy project vào Group
 AssigneProjectToGroup (){
-# Các biến truyền vào $urlProject,$token,$projectName,$projectDescription,$groupName
+# Các biến truyền vào $urlGitlab,$token,$projectName,$projectDescription,$groupName
 # Tạo project 
 curl --insecure --header "PRIVATE-TOKEN: $2" -X POST "$1/api/v4/projects?name=$3&description=$4"
-#Lấy Id Group theo groupName
-group=$(curl --insecure --header "PRIVATE-TOKEN: $2" "$1/api/v4/groups?search=$5")
-groupId=$(echo $(echo $group | cut -d':' -f 2) | cut -d',' -f 1)
-#echo $groupId
-# Lấy Id Project theo project
-project=$(curl --insecure --header "PRIVATE-TOKEN: $2" "$1/api/v4/search?scope=projects&search=$3")
-projectId=$(echo $(echo $project | cut -d':' -f 2) | cut -d',' -f 1)
-#echo $projectId
+functionTest
 # Gán Project cho Group theo projectId và và groupId
 curl --insecure --request POST --header "PRIVATE-TOKEN: $2" "$1/api/v4/groups/$groupId/projects/$projectId"
 #In ra thông tin chung
@@ -177,14 +178,7 @@ rm -f test.txt
 ##########Thêm thành viên cho Group và cấp quyên cho thành viên
 AddmemberforGroups (){
 # Các biến truyền vào $urlGitlab,$token,$groupName,$userName,$role
-# Hiển thị userId theo Username
-user=$(curl --insecure --header "PRIVATE-TOKEN: $2" "$1/api/v4/search?scope=users&search=$4")
-userId=$(echo $(echo $user | cut -d':' -f 2) | cut -d',' -f 1)
-#echo $userId
-#Hiển thị GroupID theo GroupName
-group=$(curl --insecure --header "PRIVATE-TOKEN: $2" "$1/api/v4/groups?search=$3")
-groupId=$(echo $(echo $group | cut -d':' -f 2) | cut -d',' -f 1)
-#echo $groupId
+functionTest
 #Thêm member vào group theo UserId và GroupId
 curl --insecure --request POST --header "PRIVATE-TOKEN: $2" --data "user_id=$userId&access_level=$5" "$1/api/v4/groups/$groupId/members"
 #In ra thông tin chung
@@ -194,17 +188,11 @@ rm -f Infomation.txt
 awk '!seen[$0]++' test.txt >> Infomation.txt
 rm -f test.txt
 }
+
 ##########Xoá 1 thành viên khỏi Group
 RemovememberforGroup(){
 # Các biến truyền vào $urlGitlab,$token,$groupName,$userName
-# Hiển thị userId theo Username
-user=$(curl --insecure --header "PRIVATE-TOKEN: $2" "$1/api/v4/search?scope=users&search=$4")
-userId=$(echo $(echo $user | cut -d':' -f 2) | cut -d',' -f 1)
-#echo $userId
-#Hiển thị GroupID theo GroupName
-group=$(curl --insecure --header "PRIVATE-TOKEN: $2" "$1/api/v4/groups?search=$3")
-groupId=$(echo $(echo $group | cut -d':' -f 2) | cut -d',' -f 1)
-#echo $groupId
+functionTest
 #Xoá member trong group theo UserId và GroupId
 curl --insecure --request DELETE  --header "PRIVATE-TOKEN: $2" "$1/api/v4/groups/$groupId/members/$userId"
 }
@@ -212,30 +200,17 @@ curl --insecure --request DELETE  --header "PRIVATE-TOKEN: $2" "$1/api/v4/groups
 ##########Xoá Project
 RemoveProject(){
 # Các biến truyền vào $urlGitlab $token $projectName
-# Lấy Id Project theo projectName
-project=$(curl --insecure --header "PRIVATE-TOKEN: $2" "$1/api/v4/search?scope=projects&search=$3")
-projectId=$(echo $(echo $project | cut -d':' -f 2) | cut -d',' -f 1)
-#echo $projectId
-
+functionTest
 curl --insecure --request DELETE  --header "PRIVATE-TOKEN: $2" "$1/api/v4/projects/$projectId"
 }
 
 gitclone(){
-# Các biến truyền vào $urlProject $token $projectName $folder $remoteName
-#mkdir $4
-#cd $4
-#git init
-# Lấy Id Project theo project
-projectinName=$(curl --insecure --header "PRIVATE-TOKEN: $2" "$1/api/v4/search?scope=projects&search=$3")
-projectId=$(echo $(echo $projectinName | cut -d':' -f 2) | cut -d',' -f 1)
-# Lấy urlProject theo projectId
-projectinId=$(curl --insecure --header "PRIVATE-TOKEN: $2" "$1/api/v4/projects/$projectId")
-urlProject=$(echo $(echo $(echo $projectinId | cut -d':' -f 15,16) | cut -d',' -f 1) | cut -d '"' -f 2)
-echo $urlProject
+# Các biến truyền vào $urlGitlab $token $projectName $folder $remoteName
+functionTest
 #git checkout -b $4
-git clone $urlProject
+git clone $urlGitlab
 cd $3
-git remote add $4 $urlProject
+git remote add $4 $urlGitlab
 }
 
 gitpush(){

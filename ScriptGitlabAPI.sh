@@ -52,7 +52,7 @@ Menu()
 			2)
 			MenuG(){
 			clear
-			echo "1. Git pull"
+			echo "1. Git clone"
 			echo "2. Git push"
 			echo "3. Exit"
 			while true; do
@@ -63,7 +63,7 @@ Menu()
 			;;
 			1)
 				clear
-				echo -e "Git pull"
+				echo -e "Git clone"
 				funcInput
 				echo "Nhập projectName:"
 				read projectName
@@ -81,7 +81,7 @@ Menu()
 				echo "Nhập tên branch:"
 				read branchName
 				echo "Nhập commit:"
-				read commit
+				read "commit"
 				gitpush $projectName $branchName $commit
 				echo -e "Press enter key to continues...."
 				#break;
@@ -182,9 +182,8 @@ functionTest
 #Thêm member vào group theo UserId và GroupId
 curl --insecure --request POST --header "PRIVATE-TOKEN: $2" --data "user_id=$userId&access_level=$5" "$1/api/v4/groups/$groupId/members"
 #In ra thông tin chung
-echo -e "URL: $1\r\nToken: $2\r\nProjectName: $3\r\nGroupName: $5\r\n\r\nUsername: $4\r\nAccessToken: $5\r\n\r\n" >> test.txt
-#rm -f test.txt
-rm -f Infomation.txt
+echo -e "\r\n\r\nUsername: $4\r\nAccessToken: $5\r\n\r\n" >> test.txt
+#rm -f Infomation.txt
 awk '!seen[$0]++' test.txt >> Infomation.txt
 rm -f test.txt
 }
@@ -219,7 +218,7 @@ gitpush(){
 cd $1
 git checkout -b $2
 git add .
-git commit -m "$3"
+git commit -m "$commit"
 remotev=$(git remote)
 #echo $remotev
 git push --set-upstream  $remotev $2
